@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Converted Files</title>
+</head>
+<body>
+  <h1>Converted Files</h1>
+  <ul>
+    <ul>
+        <div id="file-list"></div>
+        <!-- add more <li> elements for each converted file -->
+      </ul>
+  </ul>
+  <a href="index.html">Back to Upload page</a>
+
+<script>
+    app.get('/converted-files', (req, res) => {
+  const files = getConvertedFiles(); // assume this function returns an array of file objects with name and url properties
+  res.json(files);
+});
+
+const fileList = document.getElementById('file-list');
+
+fetch('/converted-files')
+  .then(response => response.json())
+  .then(files => {
+    // Iterate over the list of files and create a link for each one
+    files.forEach(file => {
+      const link = document.createElement('a');
+      link.href = file.url;
+      link.textContent = file.name;
+      fileList.appendChild(link);
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching file list:', error);
+  });
+
+
+</script>
+</body>
+</html>

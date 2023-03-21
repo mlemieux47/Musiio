@@ -8,6 +8,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 
 
+
 //Getting all uploaded files
 router.get('/', async (request, response) => {
     try {
@@ -75,6 +76,27 @@ router.post('/upload', upload.array('audio'), async (req, res) => {
     }
   });
 
+
+
+//Getting file
+// router.get('/download/:id', async (request, response) => {
+//     try {
+//         const id = request.params.id;
+//         const convertedFile = await ConvertedFile.findById(id);
+        
+
+//         if (!convertedFile) {
+//             return response.status(404).send('File not found');
+//         }
+
+//         const filePath = convertedFile.path;
+//         response.download(filePath);
+//     } catch (error) {
+//         response.status(500).json({ message: error.message });
+//     }
+// });
+
+
 //Uploading and Converting SINGLE File 
 // router.post('/upload', upload.single('audio'), async (req, res) => {
 //         try {
@@ -126,6 +148,8 @@ router.post('/upload', upload.array('audio'), async (req, res) => {
 //       });
 
 //updating one
+
+
 
 router.patch('/:id', (request, response) => {
     

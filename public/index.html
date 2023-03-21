@@ -15,7 +15,8 @@
     <!-- <button type="button" onclick="addMoreFiles()">Add More Files</button> -->
     <br><br>
     <button type="submit">Upload</button>
-    
+    <br><br>
+    <a href="/convertedFiles">View Converted Files</a>
   </form>
 
   <script>
@@ -40,7 +41,39 @@
         listItem.appendChild(removeButton);
         fileList.appendChild(listItem);
       }
+// Get a reference to the upload button
+const uploadButton = document.getElementById('upload-button');
 
+// Add a click event listener to the upload button
+uploadButton.addEventListener('click', async () => {
+  // Get the selected file(s) from the file input element
+  const fileInput = document.getElementById('file-input');
+  const files = fileInput.files;
+
+  // Create a new FormData object and append the file(s) to it
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append('audio', file);
+  }
+
+  // Send a POST request to the server to upload and convert the file(s)
+  const response = await fetch('/audio/upload', {
+    method: 'POST',
+    body: formData,
+  });
+
+  // Get the response data as JSON
+  const responseData = await response.json();
+
+  // Loop through the converted files and add a download link for each one
+  for (const file of responseData.files) {
+    const downloadLink = document.createElement('a');
+    downloadLink.setAttribute('href', file.path);
+    downloadLink.setAttribute('download', file.filename);
+    downloadLink.innerHTML = `Download ${file.filename}`;
+    document.body.appendChild(downloadLink);
+  }
+});
       // Hide the "Choose file" input element
     //   if (files.length > 0) {
     //     fileInput.style.display = 'none';
@@ -89,6 +122,8 @@
       else { bytes = '0 bytes'; }
       return bytes;
     }
+
+  
   </script>
 </body>
 </html>
