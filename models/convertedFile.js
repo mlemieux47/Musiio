@@ -27,6 +27,6 @@ const convertedFileSchema = new mongoose.Schema({
       }
 });
 
-const ConvertedFile = mongoose.model('ConvertedFile', convertedFileSchema);
+//const ConvertedFile = mongoose.model('ConvertedFile', convertedFileSchema);
 
-module.exports = ConvertedFile;
+module.exports = mongoose.model('ConvertedFile', convertedFileSchema);

@@ -1,0 +1,5 @@
+GET http://localhost:3000/audiofiles
+
+###
+
+GET http://localhost:3000/audiofiles/47
