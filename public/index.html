@@ -4,12 +4,89 @@
   <title>File Upload Test</title>
 </head>
 <body>
-  <h1>File Upload Test</h1>
-  <form action="/audioFiles/upload" method="post" enctype="multipart/form-data">
-    <label for="audio">Choose an audio file to upload:</label>
-    <input type="file" id="audio" name="audio" accept="audio/*">
+  <h1>Musiio Upload Test</h1>
+  <form id="file-upload-form" action="/audioFiles/upload" method="post" enctype="multipart/form-data">
+    <label for="audio">Choose audio file(s) to upload and convert to a 32kHz mp3. You may select multiple files at once</label>
+    <br><br>
+    <input type="file" id="audio" name="audio" accept="audio/*" multiple>
+    <br><br>
+    <ul id="selected-files"></ul>
+    <br><br>
+    <button type="button" onclick="addMoreFiles(event)">Add More Files</button>
     <br><br>
     <button type="submit">Upload</button>
+    
   </form>
+
+  <script>
+    src="app.js"
+    const fileInput = document.getElementById('audio');
+    const fileList = document.getElementById('selected-files');
+    fileInput.addEventListener('change', (event) => {
+    const files = event.target.files;
+    fileList.innerHTML = '';
+      for (const file of files) {
+    const listItem = document.createElement('li');
+    listItem.textContent = `${file.name} (${formatSizeUnits(file.size)})`;
+    
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Remove';
+    removeButton.addEventListener('click', () => {
+      listItem.remove();
+    });
+    listItem.appendChild(removeButton);
+    fileList.appendChild(listItem);
+  }
+
+  // Hide the "Choose file" input element
+  if (files.length > 0) {
+    fileInput.style.display = 'none';
+  }
+});
+
+  function addMoreFiles() {
+  const newInput = document.createElement('input');
+  newInput.type = "file";
+  newInput.accept = "audio/*";
+  newInput.name = "audio";
+  newInput.multiple = true;
+
+  const listItem = document.createElement('li');
+  const removeButton = document.createElement('button');
+  removeButton.textContent = 'Remove';
+  
+  removeButton.addEventListener('click', () => {
+  const fileName = listItem.querySelector('input[type="file"]').value.split('\\').pop();
+  removedFiles.push(fileName);
+  listItem.remove();
+  });
+  
+  listItem.appendChild(newInput);
+  listItem.appendChild(removeButton);
+
+  newInput.addEventListener('change', (event) => {
+    const files = event.target.files;
+    for (const file of files) {
+      const fileItem = document.createElement('li');
+      fileItem.textContent = `${file.name} (${formatSizeUnits(file.size)})`;
+      listItem.insertBefore(fileItem, removeButton);
+    }
+    newInput.style.display = 'none'; // hide the "Choose file" element once a file has been added
+  });
+
+  if (event.target.id !== 'audio') { // Check if the event target is not the "Choose file" input
+    fileList.appendChild(listItem);
+  }
+}
+    function formatSizeUnits(bytes) {
+      if (bytes >= 1073741824) { bytes = (bytes / 1073741824).toFixed(2) + ' GB'; }
+      else if (bytes >= 1048576) { bytes = (bytes / 1048576).toFixed(2) + ' MB'; }
+      else if (bytes >= 1024) { bytes = (bytes / 1024).toFixed(2) + ' KB'; }
+      else if (bytes > 1) { bytes = bytes + ' bytes'; }
+      else if (bytes == 1) { bytes = bytes + ' byte'; }
+      else { bytes = '0 bytes'; }
+      return bytes;
+    }
+  </script>
 </body>
 </html>
